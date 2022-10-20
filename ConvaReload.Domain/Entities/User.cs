@@ -13,4 +13,5 @@ public class User
     [EmailAddress] public string? Email { get; set; }
     [Phone] public string? Phone { get; set; }
     public string? City { get; set; }
+    [Required] public DateTime RegistrationDate { get; set; }
 }
