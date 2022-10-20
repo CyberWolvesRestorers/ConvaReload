@@ -35,6 +35,15 @@ namespace ConvaReload.Controllers
 
             return Ok(user);
         }
+        
+        // POST: api/User
+        [HttpPost]
+        public async Task<IActionResult> PostUser(User user)
+        {
+            await _users.AddAsync(user);
+
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+        }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
@@ -46,15 +55,6 @@ namespace ConvaReload.Controllers
             }
 
             return Ok(await _users.UpdateAsync(user));
-        }
-
-        // POST: api/User
-        [HttpPost]
-        public async Task<IActionResult> PostUser(User user)
-        {
-            await _users.AddAsync(user);
-
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
         // DELETE: api/User/5
