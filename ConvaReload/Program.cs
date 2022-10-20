@@ -1,4 +1,7 @@
+using ConvaReload.Abstract;
 using ConvaReload.DataAccess;
+using ConvaReload.Domain.Entities;
+using ConvaReload.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +14,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+builder.Services.AddScoped<CrudRepository<User>, UserService>();
 
 var app = builder.Build();
 
