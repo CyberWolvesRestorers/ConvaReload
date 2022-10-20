@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvaReload", "ConvaReload\ConvaReload.csproj", "{65771EF7-9D3F-493B-92AA-E8A686A0C186}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvaReload.DataAccess", "ConvaReload.DataAccess\ConvaReload.DataAccess.csproj", "{0B9CFD33-669A-4EBA-B2FC-5D7D0BF4DF2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvaReload.Domain", "ConvaReload.Domain\ConvaReload.Domain.csproj", "{C993CEBF-678C-4FF8-9F91-5E50A75745BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{65771EF7-9D3F-493B-92AA-E8A686A0C186}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65771EF7-9D3F-493B-92AA-E8A686A0C186}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65771EF7-9D3F-493B-92AA-E8A686A0C186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B9CFD33-669A-4EBA-B2FC-5D7D0BF4DF2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9CFD33-669A-4EBA-B2FC-5D7D0BF4DF2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9CFD33-669A-4EBA-B2FC-5D7D0BF4DF2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9CFD33-669A-4EBA-B2FC-5D7D0BF4DF2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C993CEBF-678C-4FF8-9F91-5E50A75745BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C993CEBF-678C-4FF8-9F91-5E50A75745BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C993CEBF-678C-4FF8-9F91-5E50A75745BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C993CEBF-678C-4FF8-9F91-5E50A75745BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

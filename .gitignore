@@ -1,3 +1,8 @@
 ﻿/ConvaReload/obj/
 /ConvaReload/bin/
 /.idea/
+/.git/
+/ConvaReload.DataAccess/obj/
+/ConvaReload.DataAccess/bin/
+/ConvaReload.Domain/obj/
+/ConvaReload.Domain/bin/
