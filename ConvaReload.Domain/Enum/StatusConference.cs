@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace ConvaReload.Domain.Enum;
+﻿namespace ConvaReload.Domain.Enum;
 
 public enum StatusConference
 {
-    Expectation = 0,
+    Waiting = 0,
     Started = 1,
 }
