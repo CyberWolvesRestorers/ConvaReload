@@ -1,6 +1,6 @@
 ﻿namespace ConvaReload.Domain.Enum;
 
-public enum StatusConference
+public enum ConferenceStatus
 {
     Waiting = 0,
     Started = 1,

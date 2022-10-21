@@ -13,6 +13,6 @@ public class Conference
     [EmailAddress] public string? Email { get; set; }
     [Phone] public string? Phone { get; set; }
     [Required] public string Addition { get; set; } = "";
-    [Required] public StatusConference Status { get; set; }
+    [Required] public ConferenceStatus ConferenceStatus { get; set; }
 }
 
