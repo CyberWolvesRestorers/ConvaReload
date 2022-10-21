@@ -3,5 +3,5 @@
 public enum ConferenceStatus
 {
     Waiting = 0,
-    Started = 1,
+    InProgress = 1,
 }
