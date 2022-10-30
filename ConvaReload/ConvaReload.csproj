@@ -22,7 +22,6 @@
     <ItemGroup>
       <ProjectReference Include="..\ConvaReload.Abstract\ConvaReload.Abstract.csproj" />
       <ProjectReference Include="..\ConvaReload.DataAccess\ConvaReload.DataAccess.csproj" />
-      <ProjectReference Include="..\ConvaReload.Encryption\ConvaReload.Encryption.csproj" />
     </ItemGroup>
 
 </Project>
