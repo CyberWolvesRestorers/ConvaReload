@@ -1,11 +1,13 @@
 using ConvaReload.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using ConvaReload.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConvaReload.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly CrudRepository<User> _users;
@@ -23,7 +25,7 @@ namespace ConvaReload.Controllers
         }
 
         // GET: api/User/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _users.GetByIdAsync(id);

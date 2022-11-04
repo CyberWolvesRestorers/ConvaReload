@@ -1,11 +1,13 @@
 using ConvaReload.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using ConvaReload.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ConvaReload.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ConferenceController : ControllerBase
     {
         private readonly CrudRepository<Conference> _conferences;
@@ -16,14 +18,14 @@ namespace ConvaReload.Controllers
         }
 
         // GET: api/Conference
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetConferences()
         {
             return Ok(await _conferences.GetAllAsync());
         }
 
         // GET: api/Conference/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetConference(int id)
         {
             var conference = await _conferences.GetByIdAsync(id);

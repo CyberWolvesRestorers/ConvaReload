@@ -4,8 +4,6 @@ using System.Security.Cryptography;
 using System.Text;
 using ConvaReload.Abstract;
 using ConvaReload.Domain.Entities;
-using ConvaReload.Encryption;
-using ConvaReload.Encryption.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
