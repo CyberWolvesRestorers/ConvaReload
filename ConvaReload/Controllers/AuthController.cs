@@ -2,8 +2,9 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using ConvaReload.Abstract;
 using ConvaReload.Domain.Entities;
+using ConvaReload.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,16 +15,27 @@ namespace ConvaReload.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly CrudRepository<User> _users;
+        private readonly IUserService _userService;
 
-        public AuthController(IConfiguration configuration, CrudRepository<User> users)
+        public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
-            _users = users;
+            _userService = userService;
         }
-        
+
+        [HttpGet, Authorize]
+        public ActionResult<object> GetMe()
+        {
+            return Ok(new
+            {
+                identity = _userService.GetMyName(),
+                name = User.FindFirstValue(ClaimTypes.Name),
+                role = User.FindFirstValue(ClaimTypes.Role)
+            });
+        }
+
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserCredentials credentials)
+        public async Task<ActionResult<object>> Register(UserCredentials credentials)
         {
             var user = new User();
             
@@ -31,15 +43,15 @@ namespace ConvaReload.Controllers
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            await _users.AddAsync(user);
+            await _userService.GetRepository().AddAsync(user);
             
-            return Ok(user);
+            return GetMe();
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserCredentials credentials)
         {
-            var user = (await _users.FindAsync(u => u.Username == credentials.Username)).First();
+            var user = (await _userService.GetRepository().FindAsync(u => u.Username == credentials.Username)).First();
             
             if (user == null)
             {
@@ -51,15 +63,68 @@ namespace ConvaReload.Controllers
             }
             
             string token = CreateToken(user);
+
+            var refreshToken = GenerateRefreshToken();
             
-            return Ok();
+            var cookiesOptions = new CookieOptions()
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expires
+            };
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookiesOptions);
+            user.RefreshToken = refreshToken.Token;
+            user.TokenCreated = refreshToken.Created;
+            user.TokenExpires = refreshToken.Expires;
+            
+            return Ok(token);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<string>> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            var user = (await _userService.GetRepository().FindAsync(user => user.RefreshToken.Equals(refreshToken)))
+                .First();
+            if (user != null)
+            {
+                if (user.TokenExpires < DateTime.Now)
+                {
+                    return Unauthorized("Token expired.");
+                }
+
+                var token = CreateToken(user);
+                
+                var newRefreshToken = GenerateRefreshToken();
+                var cookiesOptions = new CookieOptions()
+                {
+                    HttpOnly = true,
+                    Expires = newRefreshToken.Expires
+                };
+                Response.Cookies.Append("refreshToken", newRefreshToken.Token, cookiesOptions);
+                user.RefreshToken = newRefreshToken.Token;
+                user.TokenCreated = newRefreshToken.Created;
+                user.TokenExpires = newRefreshToken.Expires;
+
+                return Ok(token);
+            }
+            return Unauthorized("Invalid Refresh token.");
+        }
+
+        private RefreshToken GenerateRefreshToken()
+        {
+            return new RefreshToken()
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddDays(1)
+            };
         }
 
         private string CreateToken(User user)
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, "Member")
             };
             
             var key = new SymmetricSecurityKey(

@@ -3,6 +3,7 @@ using ConvaReload.Abstract;
 using ConvaReload.DataAccess;
 using ConvaReload.Domain.Entities;
 using ConvaReload.Services;
+using ConvaReload.Services.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -29,7 +30,10 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
-builder.Services.AddScoped<CrudRepository<User>, UserService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters()
