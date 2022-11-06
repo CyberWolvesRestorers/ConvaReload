@@ -42,7 +42,7 @@ namespace ConvaReload.Controllers
         {
             await _users.AddAsync(user);
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            return Ok(user);
         }
 
         // PUT: api/User/5
@@ -77,7 +77,7 @@ namespace ConvaReload.Controllers
         {
             await _users.AddRangeAsync(users);
 
-            return CreatedAtAction(nameof(GetUsers), users.Select(u => u.Id), users);
+            return Ok(users);
         }
     
         // PUT: api/User/range
