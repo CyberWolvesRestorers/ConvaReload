@@ -15,6 +15,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
 builder.Services.AddScoped<CrudRepository<User>, UserService>();
+builder.Services.AddScoped<CrudRepository<Conference>, ConferenceService>();
 
 var app = builder.Build();
 

@@ -15,4 +15,3 @@ public class Conference
     [Required] public string Addition { get; set; } = "";
     [Required] public ConferenceStatus ConferenceStatus { get; set; }
 }
-
