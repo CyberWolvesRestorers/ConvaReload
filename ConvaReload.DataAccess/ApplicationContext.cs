@@ -11,4 +11,5 @@ public class ApplicationContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Conference> Conferences { get; set; }
+    public DbSet<FileDetails> FileDetails { get; set; }
 }
