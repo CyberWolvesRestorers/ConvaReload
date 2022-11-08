@@ -1,21 +1,26 @@
-using ConvaReload.DataAccess;
-using ConvaReload.Repositories;
+using System.Linq.Expressions;
+using ConvaReload.Abstract;
+using ConvaReload.Domain.Entities;
 using ConvaReload.Services.Abstract;
 
 namespace ConvaReload.Services;
 
 public class ConferenceService : IConferenceService
 {
-    private readonly ApplicationContext _context;
-    private readonly IHttpContextAccessor _accessor;
-    private readonly ConferenceRepository _conferenceRepository;
+    private readonly IConferenceRepository _conferenceRepository;
 
-    public ConferenceService(ApplicationContext context, IHttpContextAccessor accessor)
+    public ConferenceService(IConferenceRepository conferenceRepository)
     {
-        _context = context;
-        _accessor = accessor;
-        _conferenceRepository = new ConferenceRepository(context);
+        _conferenceRepository = conferenceRepository;
     }
 
-    public ConferenceRepository GetRepository() => _conferenceRepository;
+    public async Task<Conference> GetByIdAsync(int id) => await _conferenceRepository.GetByIdAsync(id);
+    public async Task<IEnumerable<Conference>> GetAllAsync() => await _conferenceRepository.GetAllAsync();
+    public async Task<IEnumerable<Conference>> FindAsync(Expression<Func<Conference, bool>> exp) => await _conferenceRepository.FindAsync(exp);
+    public async Task<Conference> AddAsync(Conference conference) => await _conferenceRepository.AddAsync(conference);
+    public async Task<Conference> UpdateAsync(Conference conference) => await _conferenceRepository.UpdateAsync(conference);
+    public async Task<Conference> RemoveAsync(Conference conference) => await _conferenceRepository.RemoveAsync(conference);
+    public async Task<IEnumerable<Conference>> AddRangeAsync(IEnumerable<Conference> conferences) => await _conferenceRepository.AddRangeAsync(conferences);
+    public async Task<IEnumerable<Conference>> UpdateRangeAsync(IEnumerable<Conference> conferences) => await _conferenceRepository.UpdateRangeAsync(conferences);
+    public async Task<IEnumerable<Conference>> RemoveRangeAsync(IEnumerable<Conference> conferences) => await _conferenceRepository.RemoveRangeAsync(conferences);
 }

@@ -43,7 +43,7 @@ namespace ConvaReload.Controllers
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            await _userService.GetRepository().AddAsync(user);
+            await _userService.AddAsync(user);
             
             return GetMe();
         }
@@ -51,7 +51,7 @@ namespace ConvaReload.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserCredentials credentials)
         {
-            var user = (await _userService.GetRepository().FindAsync(u => u.Username == credentials.Username)).First();
+            var user = (await _userService.FindAsync(u => u.Username == credentials.Username)).First();
             
             if (user == null)
             {
@@ -83,7 +83,7 @@ namespace ConvaReload.Controllers
         public async Task<ActionResult<string>> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
-            var user = (await _userService.GetRepository().FindAsync(user => user.RefreshToken.Equals(refreshToken)))
+            var user = (await _userService.FindAsync(user => user.RefreshToken.Equals(refreshToken)))
                 .First();
             if (user != null)
             {

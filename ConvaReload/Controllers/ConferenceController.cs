@@ -12,26 +12,24 @@ namespace ConvaReload.Controllers
     public class ConferenceController : ControllerBase
     {
         private readonly IConferenceService _conferenceService;
-        private readonly CrudRepository<Conference> _conferences;
 
         public ConferenceController(IConferenceService conferenceService)
         {
             _conferenceService = conferenceService;
-            _conferences = conferenceService.GetRepository();
         }
 
         // GET: api/Conference
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> GetConferences()
         {
-            return Ok(await _conferences.GetAllAsync());
+            return Ok(await _conferenceService.GetAllAsync());
         }
 
         // GET: api/Conference/5
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetConference(int id)
         {
-            var conference = await _conferences.GetByIdAsync(id);
+            var conference = await _conferenceService.GetByIdAsync(id);
         
             if (conference is null)
             {
@@ -45,7 +43,7 @@ namespace ConvaReload.Controllers
         [HttpPost]
         public async Task<IActionResult> PostConference(Conference conference)
         {
-            await _conferences.AddAsync(conference);
+            await _conferenceService.AddAsync(conference);
 
             return CreatedAtAction(nameof(GetConference), new { id = conference.Id }, conference);
         }
@@ -59,28 +57,28 @@ namespace ConvaReload.Controllers
                 return BadRequest();
             }
 
-            return Ok(await _conferences.UpdateAsync(conference));
+            return Ok(await _conferenceService.UpdateAsync(conference));
         }
 
         // DELETE: api/Conference/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteConference(int id)
         {
-            var conference = await _conferences.GetByIdAsync(id);
+            var conference = await _conferenceService.GetByIdAsync(id);
 
             if (conference is null)
             {
                 return NotFound();
             }
 
-            return Ok(await _conferences.RemoveAsync(conference));
+            return Ok(await _conferenceService.RemoveAsync(conference));
         }
         
         // POST: api/Conference/range
         [HttpPost("range")]
         public async Task<IActionResult> PostConferences(IEnumerable<Conference> conferences)
         {
-            await _conferences.AddRangeAsync(conferences);
+            await _conferenceService.AddRangeAsync(conferences);
 
             return CreatedAtAction(nameof(GetConferences), conferences.Select(c => c.Id), conferences);
         }
@@ -89,14 +87,14 @@ namespace ConvaReload.Controllers
         [HttpPut("range")]
         public async Task<IActionResult> PutConferences(IEnumerable<Conference> conferences)
         {
-            return Ok(await _conferences.UpdateRangeAsync(conferences));
+            return Ok(await _conferenceService.UpdateRangeAsync(conferences));
         }
     
         // DELETE: api/Conference/range
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteConferences(IEnumerable<Conference> conferences)
         {
-            return Ok(await _conferences.RemoveRangeAsync(conferences));
+            return Ok(await _conferenceService.RemoveRangeAsync(conferences));
         }
     }
 }

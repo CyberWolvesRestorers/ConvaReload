@@ -1,4 +1,3 @@
-using ConvaReload.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using ConvaReload.Domain.Entities;
 using ConvaReload.Services.Abstract;
@@ -12,26 +11,24 @@ namespace ConvaReload.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly CrudRepository<User> _users;
 
         public UserController(IUserService usersService)
         {
             _userService = usersService;
-            _users = usersService.GetRepository();
         }
 
         // GET: api/User
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await _users.GetAllAsync());
+            return Ok(await _userService.GetAllAsync());
         }
 
         // GET: api/User/5
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await _users.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
         
             if (user is null)
             {
@@ -45,7 +42,7 @@ namespace ConvaReload.Controllers
         [HttpPost]
         public async Task<IActionResult> PostUser(User user)
         {
-            await _users.AddAsync(user);
+            await _userService.AddAsync(user);
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
@@ -59,28 +56,28 @@ namespace ConvaReload.Controllers
                 return BadRequest();
             }
 
-            return Ok(await _users.UpdateAsync(user));
+            return Ok(await _userService.UpdateAsync(user));
         }
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _users.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
 
             if (user is null)
             {
                 return NotFound();
             }
 
-            return Ok(await _users.RemoveAsync(user));
+            return Ok(await _userService.RemoveAsync(user));
         }
         
         // POST: api/User/range
         [HttpPost("range")]
         public async Task<IActionResult> PostUsers(IEnumerable<User> users)
         {
-            await _users.AddRangeAsync(users);
+            await _userService.AddRangeAsync(users);
 
             return CreatedAtAction(nameof(GetUsers), users.Select(u => u.Id), users);
         }
@@ -89,14 +86,14 @@ namespace ConvaReload.Controllers
         [HttpPut("range")]
         public async Task<IActionResult> PutUsers(IEnumerable<User> users)
         {
-            return Ok(await _users.UpdateRangeAsync(users));
+            return Ok(await _userService.UpdateRangeAsync(users));
         }
     
         // DELETE: api/User/range
         [HttpDelete("range")]
         public async Task<IActionResult> DeleteUsers(IEnumerable<User> users)
         {
-            return Ok(await _users.RemoveRangeAsync(users));
+            return Ok(await _userService.RemoveRangeAsync(users));
         }
     }
 }
