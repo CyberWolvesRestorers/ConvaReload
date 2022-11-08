@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
         b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
 builder.Services.AddScoped<CrudRepository<User>, UserService>();
 builder.Services.AddScoped<CrudRepository<Conference>, ConferenceService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 
