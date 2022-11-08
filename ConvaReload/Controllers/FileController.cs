@@ -26,8 +26,8 @@ namespace ConvaReload.Controllers
 
             try
             {
-                await _uploadService.PostFileAsync(fileDetails.FileDetails, fileDetails.Extension);
-                return Ok();
+                int id = await _uploadService.PostFileAsync(fileDetails.FileDetails, fileDetails.Extension);
+                return Ok(id);
             }
             catch (Exception)
             {
@@ -46,8 +46,8 @@ namespace ConvaReload.Controllers
 
             try
             {
-                await _uploadService.PostMultiFileAsync(fileDetails);
-                return Ok();
+                var ids = await _uploadService.PostMultiFileAsync(fileDetails);
+                return Ok(ids);
             }
             catch (Exception)
             {

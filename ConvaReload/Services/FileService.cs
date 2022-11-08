@@ -14,7 +14,7 @@ public class FileService : IFileService
         _context = context;
     }
 
-    public async Task PostFileAsync(IFormFile fileData, string extension)
+    public async Task<int> PostFileAsync(IFormFile fileData, string extension)
     {
         try
         {
@@ -33,6 +33,7 @@ public class FileService : IFileService
 
             var result = _context.FileDetails.Add(fileDetails);
             await _context.SaveChangesAsync();
+            return fileDetails.Id;
         }
         catch (Exception)
         {
@@ -40,10 +41,11 @@ public class FileService : IFileService
         }
     }
     
-    public async Task PostMultiFileAsync(List<FileUploadModel> fileData)
+    public async Task<IEnumerable<int>> PostMultiFileAsync(List<FileUploadModel> fileData)
     {
         try
         {
+            List<int> ids = new List<int>();
             foreach (FileUploadModel file in fileData)
             {
                 var fileDetails = new FileDetails()
@@ -60,8 +62,10 @@ public class FileService : IFileService
                 }
 
                 var result = _context.FileDetails.Add(fileDetails);
+                ids.Add(fileDetails.Id);
             }
             await _context.SaveChangesAsync();
+            return ids;
         }
         catch (Exception)
         {
