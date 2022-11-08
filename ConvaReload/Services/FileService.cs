@@ -22,7 +22,8 @@ public class FileService : IFileService
             {
                 Id = 0,
                 FileName = fileData.FileName,
-                Extension = extension
+                Extension = extension,
+                Size = fileData.Length
             };
 
             using (var stream = new MemoryStream())
@@ -52,7 +53,8 @@ public class FileService : IFileService
                 {
                     Id = 0,
                     FileName = file.FileDetails.FileName,
-                    Extension = file.Extension
+                    Extension = file.Extension,
+                    Size = file.FileDetails.Length
                 };
 
                 using (var stream = new MemoryStream())
