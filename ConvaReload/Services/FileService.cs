@@ -23,16 +23,18 @@ public class FileService : IFileService
                 Id = 0,
                 FileName = fileData.FileName,
                 Extension = extension,
-                Size = fileData.Length
+                Size = fileData.Length,
+                CreatedAt = DateTime.Now.ToUniversalTime(),
+                UpdatedAt = DateTime.Now.ToUniversalTime()
             };
 
             using (var stream = new MemoryStream())
             {
-                fileData.CopyTo(stream);
+                await fileData.CopyToAsync(stream);
                 fileDetails.FileData = stream.ToArray();
             }
 
-            var result = _context.FileDetails.Add(fileDetails);
+            _context.FileDetails.Add(fileDetails);
             await _context.SaveChangesAsync();
             return fileDetails.Id;
         }
@@ -54,16 +56,18 @@ public class FileService : IFileService
                     Id = 0,
                     FileName = file.FileDetails.FileName,
                     Extension = file.Extension,
-                    Size = file.FileDetails.Length
+                    Size = file.FileDetails.Length,
+                    CreatedAt = DateTime.Now.ToUniversalTime(),
+                    UpdatedAt = DateTime.Now.ToUniversalTime()
                 };
 
                 using (var stream = new MemoryStream())
                 {
-                    file.FileDetails.CopyTo(stream);
+                    await file.FileDetails.CopyToAsync(stream);
                     fileDetails.FileData = stream.ToArray();
                 }
 
-                var result = _context.FileDetails.Add(fileDetails);
+                _context.FileDetails.Add(fileDetails);
                 ids.Add(fileDetails.Id);
             }
             await _context.SaveChangesAsync();
