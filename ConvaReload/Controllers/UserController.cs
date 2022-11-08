@@ -1,6 +1,7 @@
 using ConvaReload.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using ConvaReload.Domain.Entities;
+using ConvaReload.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ConvaReload.Controllers
@@ -10,11 +11,13 @@ namespace ConvaReload.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
         private readonly CrudRepository<User> _users;
 
-        public UserController(CrudRepository<User> users)
+        public UserController(IUserService usersService)
         {
-            _users = users;
+            _userService = usersService;
+            _users = usersService.GetRepository();
         }
 
         // GET: api/User

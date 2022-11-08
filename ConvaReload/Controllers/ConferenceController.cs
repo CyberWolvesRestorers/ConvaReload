@@ -1,6 +1,7 @@
 using ConvaReload.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using ConvaReload.Domain.Entities;
+using ConvaReload.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ConvaReload.Controllers
@@ -10,11 +11,13 @@ namespace ConvaReload.Controllers
     [Authorize]
     public class ConferenceController : ControllerBase
     {
+        private readonly IConferenceService _conferenceService;
         private readonly CrudRepository<Conference> _conferences;
 
-        public ConferenceController(CrudRepository<Conference> conferences)
+        public ConferenceController(IConferenceService conferenceService)
         {
-            _conferences = conferences;
+            _conferenceService = conferenceService;
+            _conferences = conferenceService.GetRepository();
         }
 
         // GET: api/Conference

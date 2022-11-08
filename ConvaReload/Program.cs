@@ -1,7 +1,5 @@
 using System.Text;
-using ConvaReload.Abstract;
 using ConvaReload.DataAccess;
-using ConvaReload.Domain.Entities;
 using ConvaReload.Services;
 using ConvaReload.Services.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,6 +30,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
         b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IConferenceService, ConferenceService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

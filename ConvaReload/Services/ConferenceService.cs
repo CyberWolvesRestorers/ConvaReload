@@ -1,63 +1,21 @@
-using System.Linq.Expressions;
-using ConvaReload.Abstract;
 using ConvaReload.DataAccess;
-using ConvaReload.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+using ConvaReload.Repositories;
+using ConvaReload.Services.Abstract;
 
 namespace ConvaReload.Services;
 
-public class ConferenceService : CrudRepository<Conference>
+public class ConferenceService : IConferenceService
 {
     private readonly ApplicationContext _context;
+    private readonly IHttpContextAccessor _accessor;
+    private readonly ConferenceRepository _conferenceRepository;
 
-    public ConferenceService(ApplicationContext context)
+    public ConferenceService(ApplicationContext context, IHttpContextAccessor accessor)
     {
         _context = context;
+        _accessor = accessor;
+        _conferenceRepository = new ConferenceRepository(context);
     }
 
-    public override async Task<Conference> GetByIdAsync(int id) => await _context.Conferences.FindAsync(id);
-    public override async Task<IEnumerable<Conference>> GetAllAsync() => await _context.Conferences.ToListAsync();
-    public override async Task<IEnumerable<Conference>> FindAsync(Expression<Func<Conference, bool>> exp) => await _context.Conferences.Where(exp).ToListAsync();
-
-    public override async Task<Conference> AddAsync(Conference conference)
-    {
-        _context.Conferences.Add(conference);
-        await _context.SaveChangesAsync();
-        return conference;
-    }
-
-    public override async Task<Conference> UpdateAsync(Conference conference)
-    {
-        _context.Conferences.Update(conference);
-        await _context.SaveChangesAsync();
-        return conference;
-    }
-
-    public override async Task<Conference> RemoveAsync(Conference conference)
-    {
-        _context.Conferences.Remove(conference);
-        await _context.SaveChangesAsync();
-        return conference;
-    }
-
-    public override async Task<IEnumerable<Conference>> AddRangeAsync(IEnumerable<Conference> conferences)
-    {
-        _context.Conferences.AddRange(conferences);
-        await _context.SaveChangesAsync();
-        return conferences;
-    }
-
-    public override async Task<IEnumerable<Conference>> UpdateRangeAsync(IEnumerable<Conference> conferences)
-    {
-        _context.Conferences.UpdateRange(conferences);
-        await _context.SaveChangesAsync();
-        return conferences;
-    }
-
-    public override async Task<IEnumerable<Conference>> RemoveRangeAsync(IEnumerable<Conference> conferences)
-    {
-        _context.Conferences.RemoveRange(conferences);
-        await _context.SaveChangesAsync();
-        return conferences;
-    }
+    public ConferenceRepository GetRepository() => _conferenceRepository;
 }
