@@ -21,6 +21,14 @@ public class ConferenceService : CrudRepository<Conference>
 
     public override async Task<Conference> AddAsync(Conference conference)
     {
+        string pin = "";
+        Random rnd = new Random();
+        for (int i = 0; i < 6; i++)
+        {
+            pin += rnd.Next(10).ToString();
+        }
+
+        conference.PinCode = pin;
         _context.Conferences.Add(conference);
         await _context.SaveChangesAsync();
         return conference;
