@@ -1,0 +1,26 @@
+﻿version: "3"
+services:
+  database:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+      POSTGRES_DB: convadb
+    volumes:
+      - pgd:/var/lib/postgresql/data
+
+  application:
+    command: dotnet ConvaReload.dll 
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+    restart: always
+    build:
+      context: .
+      dockerfile: ConvaReload/Dockerfile
+  
+
+volumes:
+  pgd:
