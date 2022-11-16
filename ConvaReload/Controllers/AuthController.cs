@@ -35,7 +35,7 @@ namespace ConvaReload.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<object>> Register(UserCredentials credentials)
+        public async Task<ActionResult<User>> Register(UserCredentials credentials)
         {
             CreatePasswordHash(credentials.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var user = new User
@@ -54,11 +54,11 @@ namespace ConvaReload.Controllers
 
             await _userService.AddAsync(user);
             
-            return GetMe();
+            return Ok(user);
         }
         
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserCredentials credentials)
+        public async Task<ActionResult<string>> Login(loginUser credentials)
         {
             var user = (await _userService.FindAsync(u => u.Username == credentials.Username)).First();
             
