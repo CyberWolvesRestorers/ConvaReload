@@ -58,7 +58,7 @@ namespace ConvaReload.Controllers
         }
         
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(loginUser credentials)
+        public async Task<ActionResult<string>> Login(UserAuthenticationArguments credentials)
         {
             var user = (await _userService.FindAsync(u => u.Username == credentials.Username)).First();
             
