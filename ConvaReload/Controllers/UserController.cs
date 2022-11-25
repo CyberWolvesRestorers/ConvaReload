@@ -48,7 +48,7 @@ namespace ConvaReload.Controllers
         }
 
         // PUT: api/User/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles="admin, user")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
             if (id != user.Id)
@@ -60,7 +60,7 @@ namespace ConvaReload.Controllers
         }
 
         // DELETE: api/User/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles="admin, user")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _userService.GetByIdAsync(id);
@@ -83,14 +83,14 @@ namespace ConvaReload.Controllers
         }
     
         // PUT: api/User/range
-        [HttpPut("range")]
+        [HttpPut("range"), Authorize(Roles="admin, user")]
         public async Task<IActionResult> PutUsers(IEnumerable<User> users)
         {
             return Ok(await _userService.UpdateRangeAsync(users));
         }
     
         // DELETE: api/User/range
-        [HttpDelete("range")]
+        [HttpDelete("range"), Authorize(Roles="admin, user")]
         public async Task<IActionResult> DeleteUsers(IEnumerable<User> users)
         {
             return Ok(await _userService.RemoveRangeAsync(users));

@@ -5,6 +5,7 @@ using System.Text;
 using ConvaReload.Domain.Entities;
 using ConvaReload.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,11 +17,16 @@ namespace ConvaReload.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
 
-        public AuthController(IConfiguration configuration, IUserService userService)
+        public AuthController(IConfiguration configuration, IUserService userService, 
+            RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             _configuration = configuration;
             _userService = userService;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         [HttpGet, Authorize]
@@ -35,7 +41,7 @@ namespace ConvaReload.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserCredentials credentials)
+        public async Task<ActionResult<object>> Register(UserCredentials credentials)
         {
             CreatePasswordHash(credentials.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var user = new User
@@ -46,7 +52,7 @@ namespace ConvaReload.Controllers
                 Email = credentials.Email,
                 Phone = credentials.Phone,
                 City = credentials.City,
-                RegistrationDate = DateTime.Now,
+                //RegistrationDate = DateTime.Now,
                 Username = credentials.Username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
@@ -54,7 +60,7 @@ namespace ConvaReload.Controllers
 
             await _userService.AddAsync(user);
             
-            return Ok(user);
+            return GetMe();
         }
         
         [HttpPost("login")]
@@ -127,20 +133,25 @@ namespace ConvaReload.Controllers
                 Expires = DateTime.Now.AddDays(1)
             };
         }
-
-        private string CreateToken(User user)
+        
+        public List<Claim> GetClaimsAsync(User user)
         {
-            var claims = new List<Claim>()
+            string allRoles = string.Join(",", _roleManager.Roles.ToList());
+            List<Claim> claim = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Member")
+                new Claim(ClaimTypes.Role, allRoles)
             };
-            
+            return claim;
+        }
+        
+        private string CreateToken(User user)
+        {
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
             var token = new JwtSecurityToken(
-                claims: claims, 
+                claims: GetClaimsAsync(user), 
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: credentials);
 

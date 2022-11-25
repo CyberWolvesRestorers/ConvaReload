@@ -1,10 +1,12 @@
 using System.Text;
 using ConvaReload.Abstract;
 using ConvaReload.DataAccess;
+using ConvaReload.Domain.Entities;
 using ConvaReload.Repositories;
 using ConvaReload.Services;
 using ConvaReload.Services.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -30,6 +32,12 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName)));
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(op => op.LoginPath = ("/UserAuthentcation/Login"));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IConferenceRepository, ConferenceRepository>();

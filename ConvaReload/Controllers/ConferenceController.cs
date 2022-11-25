@@ -61,7 +61,7 @@ namespace ConvaReload.Controllers
         }
 
         // DELETE: api/Conference/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles="admin, user")]
         public async Task<IActionResult> DeleteConference(int id)
         {
             var conference = await _conferenceService.GetByIdAsync(id);
@@ -75,7 +75,7 @@ namespace ConvaReload.Controllers
         }
         
         // POST: api/Conference/range
-        [HttpPost("range")]
+        [HttpPost("range"), Authorize(Roles="user")]
         public async Task<IActionResult> PostConferences(IEnumerable<Conference> conferences)
         {
             await _conferenceService.AddRangeAsync(conferences);
@@ -84,14 +84,14 @@ namespace ConvaReload.Controllers
         }
     
         // PUT: api/Conference/range
-        [HttpPut("range")]
+        [HttpPut("range"), Authorize(Roles="user")]
         public async Task<IActionResult> PutConferences(IEnumerable<Conference> conferences)
         {
             return Ok(await _conferenceService.UpdateRangeAsync(conferences));
         }
     
         // DELETE: api/Conference/range
-        [HttpDelete("range")]
+        [HttpDelete("range"), Authorize(Roles="admin, user")]
         public async Task<IActionResult> DeleteConferences(IEnumerable<Conference> conferences)
         {
             return Ok(await _conferenceService.RemoveRangeAsync(conferences));
